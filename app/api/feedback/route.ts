@@ -7,7 +7,7 @@ type FeedbackInsert = Database['public']['Tables']['feedback']['Insert']
 export async function POST(request: NextRequest) {
   try {
     // Create server-side Supabase client
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     
     if (!supabaseUrl || !supabaseServiceKey) {
@@ -18,7 +18,21 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+    // Validate URL format
+    if (!supabaseUrl.includes('.supabase.co') && !supabaseUrl.includes('localhost')) {
+      console.error('Invalid Supabase URL format:', supabaseUrl)
+      return NextResponse.json(
+        { error: 'Invalid database configuration' },
+        { status: 500 }
+      )
+    }
+    
+    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    })
     
     const body = await request.json()
     
@@ -60,7 +74,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     // Create server-side Supabase client
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     
     if (!supabaseUrl || !supabaseServiceKey) {
@@ -71,7 +85,21 @@ export async function GET() {
       )
     }
     
-    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+    // Validate URL format
+    if (!supabaseUrl.includes('.supabase.co') && !supabaseUrl.includes('localhost')) {
+      console.error('Invalid Supabase URL format:', supabaseUrl)
+      return NextResponse.json(
+        { error: 'Invalid database configuration' },
+        { status: 500 }
+      )
+    }
+    
+    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    })
     
     const { data, error } = await supabase
       .from('feedback')

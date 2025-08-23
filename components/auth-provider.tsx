@@ -22,8 +22,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!supabase) {
       setLoading(false)
+      console.warn('Supabase not configured - authentication disabled')
       return
     }
+
+    // Test connection before proceeding
+    const testConnection = async () => {
+      try {
+        const { error } = await supabase.from('feedback').select('count').limit(1)
+        if (error && error.code !== 'PGRST116') { // PGRST116 is "relation does not exist" which is ok
+          console.error('Supabase connection test failed:', error)
+        }
+      } catch (error) {
+        console.error('Supabase connection error:', error)
+      }
+    }
+
+    testConnection()
   }, [supabase])
 
   useEffect(() => {
