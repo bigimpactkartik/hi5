@@ -29,22 +29,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Test connection and provide helpful error messages
     const testConnection = async () => {
       try {
-        // Simple connection test
-        const { error } = await supabase.from('feedback').select('count').limit(1).maybeSingle()
+        // Test connection without querying specific tables
+        const { error } = await supabase.auth.getSession()
         if (error) {
-          if (error.code === 'PGRST116') {
-            console.info('Supabase connected but feedback table not found - this is normal if migrations haven\'t been run')
-          } else if (error.message?.includes('refused') || error.message?.includes('network')) {
-            console.error('Supabase connection refused. Please check:', {
-              url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-              suggestion: 'Verify your Supabase project URL and ensure the project is active'
-            })
+          console.error('Supabase auth connection failed:', error)
+        } else {
+          console.info('Supabase connection successful')
+          
+          // Test if feedback table exists
+          const { error: tableError } = await supabase.from('feedback').select('count').limit(1).maybeSingle()
+          if (tableError) {
+            if (tableError.code === '42P01') {
+              console.warn('⚠️  Database table "feedback" does not exist.')
+              console.info('📋 To fix this, you need to run the database migration:')
+              console.info('   1. Go to your Supabase dashboard')
+              console.info('   2. Navigate to the SQL Editor')
+              console.info('   3. Run the migration from: supabase/migrations/20250823124906_steep_disk.sql')
+              console.info('   4. Or use Supabase CLI: supabase db push')
+            } else {
+              console.error('Database table access error:', tableError)
+            }
           } else {
-            console.error('Supabase connection test failed:', error)
+            console.info('✅ Database table "feedback" is accessible')
           }
         }
       } catch (error) {
-        console.error('Supabase connection error - the project may be paused or the URL may be incorrect:', error)
+        console.error('Supabase connection error:', error)
       }
     }
 
