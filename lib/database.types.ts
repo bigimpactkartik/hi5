@@ -9,7 +9,7 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      feedback: {
+      feedbacks: {
         Row: {
           id: string
           created_at: string

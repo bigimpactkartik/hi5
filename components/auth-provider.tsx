@@ -37,10 +37,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.info('Supabase connection successful')
           
           // Test if feedback table exists
-          const { error: tableError } = await supabase.from('feedback').select('count').limit(1).maybeSingle()
+          const { error: tableError } = await supabase.from('feedbacks').select('count').limit(1).maybeSingle()
           if (tableError) {
             if (tableError.code === '42P01') {
-              console.warn('⚠️  Database table "feedback" does not exist.')
+              console.warn('⚠️  Database table "feedbacks" does not exist.')
               console.info('📋 To fix this, you need to run the database migration:')
               console.info('   1. Go to your Supabase dashboard')
               console.info('   2. Navigate to the SQL Editor')
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               console.error('Database table access error:', tableError)
             }
           } else {
-            console.info('✅ Database table "feedback" is accessible')
+            console.info('✅ Database table "feedbacks" is accessible')
           }
         }
       } catch (error) {
