@@ -46,7 +46,8 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
           ai_refined_text: feedbackData.aiRefinedText,
           final_text: feedbackData.finalText || feedbackData.originalText,
           use_ai: feedbackData.useAI,
-          is_accurate: feedbackData.isAccurate
+          is_accurate: feedbackData.isAccurate,
+          user_id: user?.id
         })
       })
 
