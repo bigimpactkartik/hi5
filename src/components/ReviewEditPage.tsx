@@ -1,10 +1,9 @@
-"use client"
-
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import type { FeedbackData } from "@/app/page"
+import { Button } from "./ui/button"
+import { Textarea } from "./ui/textarea"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
+import { enhanceText } from "../lib/supabase"
+import type { FeedbackData } from "../App"
 
 interface ReviewEditPageProps {
   feedbackData: FeedbackData
@@ -22,23 +21,9 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
         // Generate AI-refined text if needed
         setIsLoading(true)
         try {
-          const response = await fetch("/api/enhance-text", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              text: feedbackData.originalText,
-              type: feedbackData.type,
-            }),
-          })
-
-          if (response.ok) {
-            const data = await response.json()
-            const aiText = data.enhancedText || feedbackData.originalText
-            setEditableText(aiText)
-            onUpdate({ aiRefinedText: aiText })
-          } else {
-            setEditableText(feedbackData.originalText || "")
-          }
+          const aiText = await enhanceText(feedbackData.originalText, feedbackData.type)
+          setEditableText(aiText)
+          onUpdate({ aiRefinedText: aiText })
         } catch (error) {
           console.error("Enhancement error:", error)
           setEditableText(feedbackData.originalText || "")

@@ -1,11 +1,9 @@
-"use client"
-
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Textarea } from "@/components/ui/textarea"
-import { Checkbox } from "@/components/ui/checkbox"
-import type { FeedbackData } from "@/app/page"
+import { Button } from "./ui/button"
+import { Card } from "./ui/card"
+import { Textarea } from "./ui/textarea"
+import { Checkbox } from "./ui/checkbox"
+import type { FeedbackData } from "../App"
 
 interface ImprovementEntryProps {
   feedbackData: FeedbackData

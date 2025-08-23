@@ -1,10 +1,8 @@
-"use client"
-
 import { useState } from "react"
-import { LandingPage } from "@/components/landing-page"
-import { ImprovementEntry } from "@/components/improvement-entry"
-import { ThankYouScreen } from "@/components/thank-you-screen"
-import { ReviewEditPage } from "@/components/review-edit-page"
+import { LandingPage } from "./components/LandingPage"
+import { ImprovementEntry } from "./components/ImprovementEntry"
+import { ThankYouScreen } from "./components/ThankYouScreen"
+import { ReviewEditPage } from "./components/ReviewEditPage"
 
 export type FeedbackType = "loved" | "liked" | "better" | "poor"
 
@@ -17,7 +15,7 @@ export interface FeedbackData {
   finalText?: string
 }
 
-export default function FeedbackFlow() {
+export default function App() {
   const [currentStep, setCurrentStep] = useState(0)
   const [feedbackData, setFeedbackData] = useState<FeedbackData>({
     type: "loved",

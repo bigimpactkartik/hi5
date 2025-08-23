@@ -1,8 +1,6 @@
-"use client"
-
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import type { FeedbackType } from "@/app/page"
+import { Button } from "./ui/button"
+import { Card } from "./ui/card"
+import type { FeedbackType } from "../App"
 
 interface LandingPageProps {
   onFeedbackSelect: (type: FeedbackType) => void
