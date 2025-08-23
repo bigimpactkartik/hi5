@@ -25,7 +25,12 @@ export interface Database {
         Insert: {
           id?: string
           created_at?: string
-      comment: string | null
+          type: 'loved' | 'liked' | 'better' | 'poor'
+          original_text?: string | null
+          ai_refined_text?: string | null
+          final_text?: string | null
+          use_ai?: boolean
+          comment: string | null
           is_accurate?: boolean | null
           user_email?: string | null
           user_name?: string | null
@@ -33,7 +38,12 @@ export interface Database {
         Update: {
           id?: string
           created_at?: string
-      comment?: string | null
+          type?: 'loved' | 'liked' | 'better' | 'poor'
+          original_text?: string | null
+          ai_refined_text?: string | null
+          final_text?: string | null
+          use_ai?: boolean
+          comment?: string | null
           is_accurate?: boolean | null
           user_email?: string | null
           user_name?: string | null
@@ -41,7 +51,26 @@ export interface Database {
       }
     }
     Views: {
-      comment?: string | null
+      [key: string]: {
+        Row: {
+          [key: string]: Json | undefined
+        }
+        Insert: {
+          [key: string]: Json | undefined
+        }
+        Update: {
+          [key: string]: Json | undefined
+        }
+      }
+    }
+    Functions: {
+      [key: string]: {
+        Args: {
+          [key: string]: Json | undefined
+        }
+        Returns: Json
+      }
+    }
     Enums: {
       feedback_type: 'loved' | 'liked' | 'better' | 'poor'
     }
