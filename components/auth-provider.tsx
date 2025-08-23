@@ -22,19 +22,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!supabase) {
       setLoading(false)
-      console.warn('Supabase not configured - authentication disabled')
+      console.warn('Supabase not configured - authentication disabled. Please check your environment variables.')
       return
     }
 
-    // Test connection before proceeding
+    // Test connection and provide helpful error messages
     const testConnection = async () => {
       try {
-        const { error } = await supabase.from('feedback').select('count').limit(1)
-        if (error && error.code !== 'PGRST116') { // PGRST116 is "relation does not exist" which is ok
-          console.error('Supabase connection test failed:', error)
+        // Simple connection test
+        const { error } = await supabase.from('feedback').select('count').limit(1).maybeSingle()
+        if (error) {
+          if (error.code === 'PGRST116') {
+            console.info('Supabase connected but feedback table not found - this is normal if migrations haven\'t been run')
+          } else if (error.message?.includes('refused') || error.message?.includes('network')) {
+            console.error('Supabase connection refused. Please check:', {
+              url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+              suggestion: 'Verify your Supabase project URL and ensure the project is active'
+            })
+          } else {
+            console.error('Supabase connection test failed:', error)
+          }
         }
       } catch (error) {
-        console.error('Supabase connection error:', error)
+        console.error('Supabase connection error - the project may be paused or the URL may be incorrect:', error)
       }
     }
 

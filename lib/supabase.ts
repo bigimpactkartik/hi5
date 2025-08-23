@@ -9,8 +9,24 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() || ''
 const isValidUrl = (url: string) => {
   try {
     new URL(url)
-    return url.includes('.supabase.co') || url.includes('localhost')
+    return url.includes('.supabase.co') || url.includes('localhost') || url.includes('127.0.0.1')
   } catch {
+    return false
+  }
+}
+
+// Test if Supabase URL is reachable
+const testSupabaseConnection = async (url: string): Promise<boolean> => {
+  try {
+    const response = await fetch(`${url}/rest/v1/`, {
+      method: 'HEAD',
+      headers: {
+        'apikey': supabaseAnonKey,
+      },
+    })
+    return response.ok || response.status === 401 // 401 is expected without proper auth
+  } catch (error) {
+    console.error('Supabase connection test failed:', error)
     return false
   }
 }
@@ -21,7 +37,8 @@ export const supabase = supabaseUrl && supabaseAnonKey && isValidUrl(supabaseUrl
       auth: {
         autoRefreshToken: true,
         persistSession: true,
-        detectSessionInUrl: true
+        detectSessionInUrl: true,
+        flowType: 'pkce'
       }
     })
   : null
@@ -29,7 +46,12 @@ export const supabase = supabaseUrl && supabaseAnonKey && isValidUrl(supabaseUrl
 // Client-side auth client
 export const createSupabaseClient = () => {
   if (!supabaseUrl || !supabaseAnonKey || !isValidUrl(supabaseUrl)) {
-    console.warn('Supabase environment variables not configured or invalid URL format')
+    console.warn('Supabase configuration issue:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseAnonKey,
+      urlValid: isValidUrl(supabaseUrl),
+      url: supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : 'missing'
+    })
     return null
   }
   
@@ -40,5 +62,3 @@ export const createSupabaseClient = () => {
     return null
   }
 }
-
-// For server-side operations
