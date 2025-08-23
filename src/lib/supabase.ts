@@ -118,3 +118,71 @@ export const enhanceText = async (text: string, type: string) => {
     return text
   }
 }
+
+// Auth functions
+export const signInWithGoogle = async () => {
+  if (!supabase) {
+    console.error('Supabase not configured')
+    return { error: 'Database not configured' }
+  }
+
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin
+      }
+    })
+
+    if (error) {
+      console.error('Google sign-in error:', error)
+      return { error: error.message }
+    }
+
+    return { success: true, data }
+  } catch (error) {
+    console.error('Sign-in error:', error)
+    return { error: 'Sign-in failed' }
+  }
+}
+
+export const signOut = async () => {
+  if (!supabase) {
+    console.error('Supabase not configured')
+    return { error: 'Database not configured' }
+  }
+
+  try {
+    const { error } = await supabase.auth.signOut()
+    
+    if (error) {
+      console.error('Sign-out error:', error)
+      return { error: error.message }
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Sign-out error:', error)
+    return { error: 'Sign-out failed' }
+  }
+}
+
+export const getCurrentUser = async () => {
+  if (!supabase) {
+    return null
+  }
+
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser()
+    
+    if (error) {
+      console.error('Get user error:', error)
+      return null
+    }
+
+    return user
+  } catch (error) {
+    console.error('Get user error:', error)
+    return null
+  }
+}
