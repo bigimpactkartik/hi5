@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useAuth } from "@/components/auth/auth-provider"
+import { LoginModal } from "@/components/auth/login-modal"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import type { FeedbackData } from "@/app/page"
@@ -12,6 +14,9 @@ interface ThankYouScreenProps {
 export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   const [showConfetti, setShowConfetti] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
+  const [feedbackSaved, setFeedbackSaved] = useState(false)
+  const { user } = useAuth()
 
   const isPositiveFeedback = feedbackData.type === "loved" || feedbackData.type === "liked"
   const displayText = feedbackData.finalText || feedbackData.originalText
@@ -19,8 +24,47 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   useEffect(() => {
     setShowConfetti(true)
     const timer = setTimeout(() => setShowConfetti(false), 4000)
+    
+    // Auto-save feedback if user is already authenticated
+    if (user && !feedbackSaved) {
+      saveFeedbackToDatabase()
+    }
+    
     return () => clearTimeout(timer)
-  }, [])
+  }, [user, feedbackSaved])
+
+  const saveFeedbackToDatabase = async () => {
+    try {
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          feedback_type: feedbackData.type,
+          original_text: feedbackData.originalText,
+          ai_refined_text: feedbackData.aiRefinedText,
+          final_text: feedbackData.finalText || feedbackData.originalText,
+          use_ai: feedbackData.useAI,
+          is_accurate: feedbackData.isAccurate
+        })
+      })
+
+      if (response.ok) {
+        setFeedbackSaved(true)
+        console.log('Feedback saved successfully')
+      } else {
+        console.error('Failed to save feedback')
+      }
+    } catch (error) {
+      console.error('Error saving feedback:', error)
+    }
+  }
+
+  const handleLoginSuccess = () => {
+    setShowLoginModal(false)
+    // User will be automatically saved via useEffect
+  }
 
   const copyToClipboard = async () => {
     if (!displayText) return
@@ -87,8 +131,12 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
               </Button>
               <Button
                 onClick={() => {
-                  // TODO: Connect Google API for review submission
-                  console.log("Google sign-in clicked - API to be connected")
+                  if (!user) {
+                    setShowLoginModal(true)
+                  } else {
+                    // User is already signed in, show success message
+                    console.log("User already signed in")
+                  }
                 }}
                 variant="outline"
                 className="w-full mb-3 border-2 hover:bg-muted/50"
@@ -111,7 +159,7 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                Sign in with Google to Submit Review
+                {user ? 'Review Saved!' : 'Sign in with Google to Submit Review'}
               </Button>
               <p className="text-xs text-muted-foreground">Or paste this review on Google to support us.</p>
             </div>
@@ -119,6 +167,9 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
 
           {!isPositiveFeedback && (
             <div className="mt-6 pt-6 border-t border-border">
+              {feedbackSaved && (
+                <p className="text-sm text-green-600 mb-2">✓ Feedback saved successfully!</p>
+              )}
               <p className="text-sm text-muted-foreground">Collect your reward at the desk.</p>
             </div>
           )}
@@ -126,10 +177,18 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
 
         {/* Footer */}
         <div className="text-center space-y-2">
-          <p className="text-sm text-muted-foreground">Feedback submitted successfully</p>
+          <p className="text-sm text-muted-foreground">
+            {feedbackSaved ? 'Feedback saved successfully' : 'Feedback submitted successfully'}
+          </p>
           <p className="text-xs text-muted-foreground">Visit us at hi5.com/bipai</p>
         </div>
       </div>
+      
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSuccess={handleLoginSuccess}
+      />
     </div>
   )
 }
