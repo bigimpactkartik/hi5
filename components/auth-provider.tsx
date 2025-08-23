@@ -30,10 +30,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const testConnection = async () => {
       try {
         // Simple connection test
-        const { error } = await supabase.from('feedbacks').select('count').limit(1).maybeSingle()
+        const { error } = await supabase.from('feedback').select('count').limit(1).maybeSingle()
         if (error) {
           if (error.code === 'PGRST116') {
-            console.info('Supabase connected but feedbacks table not found - this is normal if migrations haven\'t been run')
+            console.info('Supabase connected but feedback table not found - this is normal if migrations haven\'t been run')
           } else if (error.message?.includes('refused') || error.message?.includes('network')) {
             console.error('Supabase connection refused. Please check:', {
               url: process.env.NEXT_PUBLIC_SUPABASE_URL,

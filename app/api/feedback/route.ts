@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { data, error } = await supabase
-      .from('feedbacks')
+      .from('feedback')
       .insert(feedbackData)
       .select()
       .single()
@@ -102,7 +102,7 @@ export async function GET() {
     })
     
     const { data, error } = await supabase
-      .from('feedbacks')
+      .from('feedback')
       .select('*')
       .order('created_at', { ascending: false })
 
