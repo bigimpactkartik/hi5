@@ -38,11 +38,7 @@ export async function POST(request: NextRequest) {
     
     const feedbackData: FeedbackInsert = {
       type: body.type,
-      original_text: body.originalText,
-      ai_refined_text: body.aiRefinedText,
-      final_text: body.finalText,
-      use_ai: body.useAI,
-      is_accurate: body.isAccurate,
+      comment: body.finalText || body.aiRefinedText || body.originalText,
       user_email: body.userEmail,
       user_name: body.userName,
     }

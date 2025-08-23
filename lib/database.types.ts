@@ -25,11 +25,7 @@ export interface Database {
         Insert: {
           id?: string
           created_at?: string
-          type: 'loved' | 'liked' | 'better' | 'poor'
-          original_text?: string | null
-          ai_refined_text?: string | null
-          final_text?: string | null
-          use_ai?: boolean
+      comment: string | null
           is_accurate?: boolean | null
           user_email?: string | null
           user_name?: string | null
@@ -37,11 +33,7 @@ export interface Database {
         Update: {
           id?: string
           created_at?: string
-          type?: 'loved' | 'liked' | 'better' | 'poor'
-          original_text?: string | null
-          ai_refined_text?: string | null
-          final_text?: string | null
-          use_ai?: boolean
+      comment?: string | null
           is_accurate?: boolean | null
           user_email?: string | null
           user_name?: string | null
@@ -49,11 +41,7 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      [_ in never]: never
-    }
+      comment?: string | null
     Enums: {
       feedback_type: 'loved' | 'liked' | 'better' | 'poor'
     }
