@@ -71,7 +71,7 @@ export const enhanceText = async (text: string, type: string) => {
   const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY
 
   if (!GEMINI_API_KEY) {
-    console.warn('Gemini API key not configured')
+    console.warn('Gemini API key not configured - using original text')
     return text
   }
 
@@ -103,11 +103,13 @@ export const enhanceText = async (text: string, type: string) => {
     )
 
     if (!response.ok) {
-      console.error('Gemini API error:', response.status)
+      const errorText = await response.text()
+      console.error('Gemini API error:', response.status, errorText)
       return text
     }
 
     const data = await response.json()
+    console.log('Gemini API response:', data)
     const enhancedText = data.candidates?.[0]?.content?.parts?.[0]?.text || text
 
     return enhancedText

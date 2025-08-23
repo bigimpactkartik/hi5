@@ -19,9 +19,11 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
     const initializeText = async () => {
       if (feedbackData.useAI && feedbackData.originalText && !feedbackData.aiRefinedText) {
         // Generate AI-refined text if needed
+        console.log('Starting AI enhancement for:', feedbackData.originalText)
         setIsLoading(true)
         try {
           const aiText = await enhanceText(feedbackData.originalText, feedbackData.type)
+          console.log('AI enhanced text:', aiText)
           setEditableText(aiText)
           onUpdate({ aiRefinedText: aiText })
         } catch (error) {
@@ -35,6 +37,7 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
         const textToShow = feedbackData.useAI
           ? feedbackData.aiRefinedText || feedbackData.originalText
           : feedbackData.originalText
+        console.log('Using existing text:', textToShow)
         setEditableText(textToShow || "")
       }
     }
