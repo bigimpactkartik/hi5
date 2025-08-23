@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim() || ''
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim() || ''
 
+console.log('Supabase URL:', supabaseUrl)
+console.log('Supabase Key exists:', !!supabaseAnonKey)
+
 // Validate URL format
 const isValidUrl = (url: string) => {
   try {
@@ -21,10 +24,18 @@ export const supabase = supabaseUrl && supabaseAnonKey && isValidUrl(supabaseUrl
         persistSession: true,
         detectSessionInUrl: true,
         flowType: 'pkce'
+      },
+      global: {
+        headers: {
+          'apikey': supabaseAnonKey
+        }
       }
     })
   : null
 
+if (!supabase) {
+  console.warn('Supabase client not initialized. Check your environment variables.')
+}
 export const saveFeedback = async (feedbackData: any) => {
   if (!supabase) {
     console.error('Supabase not configured')

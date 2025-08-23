@@ -39,18 +39,25 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   }, [])
 
   const getCurrentUser = async () => {
-    if (!supabase) return
+    if (!supabase) {
+      console.warn('Supabase not available for authentication')
+      return
+    }
     
     try {
       const { data: { session } } = await supabase.auth.getSession()
       setUser(session?.user ?? null)
     } catch (error) {
       console.error('Error getting current user:', error)
+      // Don't throw error, just log it
     }
   }
 
   const handleGoogleSignIn = async () => {
-    if (!supabase) return
+    if (!supabase) {
+      console.error('Supabase not configured for authentication')
+      return
+    }
     
     setIsSigningIn(true)
     try {
@@ -62,22 +69,25 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
       })
       
       if (error) {
-        console.error('Sign in error:', error)
+        console.error('Google sign in error:', error.message)
       }
     } catch (error) {
-      console.error('Sign in error:', error)
+      console.error('Google sign in error:', error)
     } finally {
       setIsSigningIn(false)
     }
   }
 
   const handleSignOut = async () => {
-    if (!supabase) return
+    if (!supabase) {
+      console.warn('Supabase not available for sign out')
+      return
+    }
     
     try {
       const { error } = await supabase.auth.signOut()
       if (error) {
-        console.error('Sign out error:', error)
+        console.error('Sign out error:', error.message)
       }
     } catch (error) {
       console.error('Sign out error:', error)
