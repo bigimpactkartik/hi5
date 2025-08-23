@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { Card } from "./ui/card"
 import { Button } from "./ui/button"
-import { saveFeedback } from "../lib/supabase"
+import { saveFeedback, supabase } from "../lib/supabase"
 import type { FeedbackData } from "../App"
+import type { User } from "@supabase/supabase-js"
 
 interface ThankYouScreenProps {
   feedbackData: FeedbackData
@@ -12,6 +13,8 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   const [showConfetti, setShowConfetti] = useState(false)
   const [copied, setCopied] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const [isSigningIn, setIsSigningIn] = useState(false)
 
   const isPositiveFeedback = feedbackData.type === "loved" || feedbackData.type === "liked"
   const displayText = feedbackData.finalText || feedbackData.originalText
@@ -23,8 +26,63 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
     // Save feedback to Supabase
     saveFeedbackToDatabase()
     
-    return () => clearTimeout(timer)
+    // Get current user and listen for auth changes
+    getCurrentUser()
+    const { data: { subscription } } = supabase?.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null)
+    }) || { data: { subscription: null } }
+    
+    return () => {
+      clearTimeout(timer)
+      subscription?.unsubscribe()
+    }
   }, [])
+
+  const getCurrentUser = async () => {
+    if (!supabase) return
+    
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      setUser(session?.user ?? null)
+    } catch (error) {
+      console.error('Error getting current user:', error)
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    if (!supabase) return
+    
+    setIsSigningIn(true)
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      })
+      
+      if (error) {
+        console.error('Sign in error:', error)
+      }
+    } catch (error) {
+      console.error('Sign in error:', error)
+    } finally {
+      setIsSigningIn(false)
+    }
+  }
+
+  const handleSignOut = async () => {
+    if (!supabase) return
+    
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        console.error('Sign out error:', error)
+      }
+    } catch (error) {
+      console.error('Sign out error:', error)
+    }
+  }
 
   const saveFeedbackToDatabase = async () => {
     setIsSaving(true)
