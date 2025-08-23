@@ -4,36 +4,36 @@
 
 :root {
   /* Updated color tokens to match vibrant feedback app design */
-  --background: oklch(1 0 0); /* Pure white background */
+  --background: oklch(0.98 0.02 280); /* Subtle purple-tinted background */
   --foreground: oklch(0.3 0 0); /* Dark gray text */
-  --card: oklch(0.99 0 0); /* Light card background */
+  --card: oklch(1 0 0); /* Pure white cards for contrast */
   --card-foreground: oklch(0.3 0 0); /* Dark text on cards */
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.3 0 0);
-  --primary: oklch(0.65 0.15 35); /* Orange primary color */
+  --primary: oklch(0.6 0.25 280); /* Vibrant purple primary */
   --primary-foreground: oklch(1 0 0); /* White text on primary */
-  --secondary: oklch(0.6 0.2 250); /* Blue secondary */
+  --secondary: oklch(0.7 0.2 320); /* Pink secondary */
   --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.97 0 0);
+  --muted: oklch(0.96 0.02 280);
   --muted-foreground: oklch(0.5 0 0);
-  --accent: oklch(0.65 0.25 290); /* Purple accent */
+  --accent: oklch(0.7 0.3 200); /* Cyan accent */
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.6 0.25 15); /* Red for destructive actions */
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.9 0 0);
+  --border: oklch(0.92 0.02 280);
   --input: oklch(0.98 0 0);
-  --ring: oklch(0.65 0.15 35 / 0.5); /* Orange ring with transparency */
+  --ring: oklch(0.6 0.25 280 / 0.5); /* Purple ring with transparency */
 
   /* Added custom feedback button colors */
-  --feedback-loved: oklch(0.6 0.2 250); /* Blue */
-  --feedback-liked: oklch(0.65 0.25 290); /* Purple */
-  --feedback-better: oklch(0.65 0.15 35); /* Orange */
-  --feedback-poor: oklch(0.6 0.25 15); /* Red */
+  --feedback-loved: oklch(0.65 0.25 140); /* Vibrant green */
+  --feedback-liked: oklch(0.7 0.2 200); /* Bright cyan */
+  --feedback-better: oklch(0.7 0.2 60); /* Warm yellow */
+  --feedback-poor: oklch(0.65 0.25 15); /* Coral red */
 
-  --chart-1: oklch(0.6 0.2 250);
-  --chart-2: oklch(0.65 0.25 290);
+  --chart-1: oklch(0.65 0.25 140);
+  --chart-2: oklch(0.7 0.2 200);
   --chart-3: oklch(0.6 0.25 15);
-  --chart-4: oklch(0.65 0.15 35);
+  --chart-4: oklch(0.7 0.2 60);
   --chart-5: oklch(0.7 0.2 120);
   --radius: 0.75rem; /* Increased radius for more rounded appearance */
   --sidebar: oklch(0.985 0 0);
@@ -43,7 +43,7 @@
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.3 0 0);
   --sidebar-border: oklch(0.9 0 0);
-  --sidebar-ring: oklch(0.6 0.2 250 / 0.5);
+  --sidebar-ring: oklch(0.6 0.25 280 / 0.5);
   --font-dm-sans: "DM Sans", sans-serif;
   --font-space-grotesk: "Space Grotesk", sans-serif;
 }

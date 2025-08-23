@@ -121,7 +121,7 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-background to-muted/20 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 relative overflow-hidden">
       {/* Confetti Animation */}
       {showConfetti && (
         <div className="absolute inset-0 pointer-events-none">
@@ -133,10 +133,12 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
                 left: `${Math.random() * 100}%`,
                 animationDelay: `${Math.random() * 3}s`,
                 backgroundColor: [
-                  "oklch(var(--feedback-loved))",
-                  "oklch(var(--feedback-liked))",
-                  "oklch(var(--feedback-better))",
-                  "oklch(var(--feedback-poor))",
+                  "#10b981", // emerald
+                  "#06b6d4", // cyan  
+                  "#8b5cf6", // violet
+                  "#f59e0b", // amber
+                  "#ef4444", // red
+                  "#ec4899", // pink
                 ][Math.floor(Math.random() * 4)],
               }}
             />
@@ -147,42 +149,44 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
       <div className="w-full max-w-md space-y-6 animate-bounce-in">
         {/* Success Icon */}
         <div className="text-center">
-          <div className="w-24 h-24 mx-auto bg-green-500 rounded-full flex items-center justify-center shadow-lg mb-4">
-            <span className="text-4xl text-white">✓</span>
+          <div className="w-24 h-24 mx-auto bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-2xl mb-4 transform hover:scale-105 transition-all duration-300">
+            <span className="text-4xl text-white font-bold">✓</span>
           </div>
         </div>
 
         {/* Thank You Card */}
-        <Card className="p-8 shadow-lg border-0 bg-card/80 backdrop-blur-sm text-center">
-          <h1 className="text-3xl font-bold text-foreground mb-4 font-[family-name:var(--font-heading)]">Thank You!</h1>
-          <p className="text-muted-foreground text-lg leading-relaxed">
+        <Card className="p-8 shadow-2xl border-0 bg-white/90 backdrop-blur-md text-center rounded-3xl">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4 font-[family-name:var(--font-heading)]">Thank You!</h1>
+          <p className="text-gray-600 text-lg leading-relaxed font-medium">
             Thank you for sharing your feedback with BIP AI.
           </p>
 
           {isPositiveFeedback && displayText && (
-            <div className="mt-6 pt-6 border-t border-border">
-              <div className="bg-muted/50 p-4 rounded-lg mb-4">
-                <p className="text-sm text-muted-foreground mb-2">Your review:</p>
-                <p className="text-sm text-foreground">{displayText}</p>
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-2xl mb-4 border border-green-200">
+                <p className="text-sm text-gray-600 mb-2 font-semibold">Your review:</p>
+                <p className="text-sm text-gray-800 font-medium">{displayText}</p>
               </div>
               <Button
                 onClick={copyToClipboard}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground mb-3"
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white mb-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
               >
                 {copied ? "Copied!" : "Copy to Clipboard"}
               </Button>
-              <p className="text-xs text-muted-foreground">Paste this review on Google to support us.</p>
+              <p className="text-xs text-gray-500 font-medium">Paste this review on Google to support us ⭐</p>
             </div>
           )}
 
           {!isPositiveFeedback && (
-            <div className="mt-6 pt-6 border-t border-border">
-              <p className="text-sm text-muted-foreground">Collect your reward at the desk.</p>
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-4 rounded-2xl border border-orange-200">
+                <p className="text-sm text-gray-700 font-semibold">🎁 Collect your reward at the desk!</p>
+              </div>
             </div>
           )}
 
           {/* Authentication Section */}
-          <div className="mt-6 pt-6 border-t border-border">
+          <div className="mt-6 pt-6 border-t border-gray-200">
             {user ? (
               <div className="text-center space-y-3">
                 <div className="flex items-center justify-center space-x-3">
@@ -190,34 +194,34 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
                     <img 
                       src={user.user_metadata.avatar_url} 
                       alt="Profile" 
-                      className="w-8 h-8 rounded-full"
+                      className="w-8 h-8 rounded-full border-2 border-green-200 shadow-md"
                     />
                   )}
                   <div>
-                    <p className="text-sm font-medium text-foreground">
+                    <p className="text-sm font-semibold text-gray-800">
                       Welcome, {user.user_metadata?.full_name || user.email}!
                     </p>
-                    <p className="text-xs text-muted-foreground">Signed in with Google</p>
+                    <p className="text-xs text-gray-500 font-medium">Signed in with Google</p>
                   </div>
                 </div>
                 <Button
                   onClick={handleSignOut}
                   variant="outline"
                   size="sm"
-                  className="text-xs"
+                  className="text-xs border-gray-300 hover:bg-gray-50 rounded-xl"
                 >
                   Sign Out
                 </Button>
               </div>
             ) : (
               <div className="text-center space-y-3">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-gray-600 font-medium">
                   Sign in to save your feedback preferences
                 </p>
                 <Button
                   onClick={handleGoogleSignIn}
                   disabled={isSigningIn}
-                  className="w-full bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 shadow-sm"
+                  className="w-full bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 shadow-lg hover:shadow-xl rounded-2xl font-semibold transform hover:scale-105 transition-all duration-300"
                 >
                   {isSigningIn ? (
                     <div className="flex items-center space-x-2">
@@ -246,7 +250,7 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
           <p className="text-sm text-muted-foreground">
             {isSaving ? "Saving feedback..." : "Feedback submitted successfully"}
           </p>
-          <p className="text-xs text-muted-foreground">Visit us at hi5.com/bipai</p>
+          <p className="text-xs text-gray-500 font-medium">Visit us at hi5.com/bipai ✨</p>
         </div>
       </div>
     </div>

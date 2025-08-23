@@ -56,11 +56,11 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
   const isPositive = feedbackData.type === "loved" || feedbackData.type === "liked"
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4 flex items-center justify-center">
-      <Card className="w-full max-w-md mx-auto shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4 flex items-center justify-center">
+      <Card className="w-full max-w-md mx-auto shadow-2xl border-0 bg-white/90 backdrop-blur-md rounded-3xl">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold text-gray-800">Confirm Review...</CardTitle>
-          <p className="text-gray-600 text-sm mt-2">
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Confirm Review...</CardTitle>
+          <p className="text-gray-600 text-sm mt-2 font-medium">
             {feedbackData.useAI ? "Enhanced version ready for editing" : "Your original text"}
           </p>
         </CardHeader>
@@ -68,27 +68,27 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
         <CardContent className="space-y-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-              <span className="ml-3 text-gray-600">Enhancing your text...</span>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+              <span className="ml-3 text-gray-600 font-medium">Enhancing your text...</span>
             </div>
           ) : (
             <>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-semibold text-gray-700">
                   {isPositive ? "Your Review:" : "Your Feedback:"}
                 </label>
                 <Textarea
                   value={editableText}
                   onChange={(e) => setEditableText(e.target.value)}
                   placeholder={`Enter your ${isPositive ? "review" : "feedback"}...`}
-                  className="min-h-[120px] resize-none border-gray-200 focus:border-blue-400 focus:ring-blue-400"
+                  className="min-h-[120px] resize-none border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 rounded-2xl bg-gray-50/50 transition-all duration-200"
                 />
               </div>
 
               <Button
                 onClick={handleSubmit}
                 disabled={!editableText.trim()}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-3 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 Submit {isPositive ? "Review" : "Feedback"}
               </Button>

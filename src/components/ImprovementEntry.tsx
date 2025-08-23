@@ -48,22 +48,22 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-background to-muted/20">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50">
       <div className="w-full max-w-md space-y-6 animate-slide-in-up">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground font-[family-name:var(--font-heading)]">{headerText}</h1>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-[family-name:var(--font-heading)]">{headerText}</h1>
         </div>
 
         {/* Input Card */}
-        <Card className="p-6 shadow-lg border-0 bg-card/80 backdrop-blur-sm">
+        <Card className="p-6 shadow-2xl border-0 bg-white/90 backdrop-blur-md rounded-3xl">
           <div className="space-y-4">
             <div>
               <Textarea
                 placeholder={placeholderText}
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                className="min-h-32 resize-none border-border/50 focus:border-primary rounded-xl"
+                className="min-h-32 resize-none border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 rounded-2xl bg-gray-50/50 transition-all duration-200"
               />
             </div>
 
@@ -73,9 +73,9 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
                   id="enhance-review"
                   checked={enhanceReview}
                   onCheckedChange={(checked) => setEnhanceReview(checked as boolean)}
-                  className="rounded-md"
+                  className="rounded-md border-2 border-blue-300 data-[state=checked]:bg-blue-500"
                 />
-                <label htmlFor="enhance-review" className="text-sm font-medium text-foreground cursor-pointer">
+                <label htmlFor="enhance-review" className="text-sm font-medium text-gray-700 cursor-pointer">
                   Enhance your review
                 </label>
               </div>
@@ -84,11 +84,11 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
             <Button
               onClick={handleSubmit}
               disabled={!text.trim() || isLoading}
-              className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+              className="w-full h-12 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             >
               {isLoading ? (
                 <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   <span>Processing...</span>
                 </div>
               ) : (
