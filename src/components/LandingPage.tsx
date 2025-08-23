@@ -48,7 +48,7 @@ export function LandingPage({ onFeedbackSelect }: LandingPageProps) {
         </div>
 
         {/* Question */}
-        <Card className="p-6 shadow-2xl border-0 bg-white/90 backdrop-blur-md rounded-3xl">
+        <Card className="p-6 shadow-2xl border-0 bg-white/95 backdrop-blur-md rounded-3xl">
           <h2 className="text-xl font-semibold text-center mb-6 text-gray-800 font-[family-name:var(--font-heading)]">
             How was our Service?
           </h2>
@@ -59,7 +59,7 @@ export function LandingPage({ onFeedbackSelect }: LandingPageProps) {
               <Button
                 key={option.type}
                 onClick={() => onFeedbackSelect(option.type)}
-                className={`${option.color} h-14 text-lg font-medium rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0 text-white font-semibold`}
+                className={`${option.color} h-14 text-lg font-medium rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0 font-semibold`}
               >
                 <span className="mr-3 text-xl">{option.icon}</span>
                 {option.label}
@@ -69,7 +69,7 @@ export function LandingPage({ onFeedbackSelect }: LandingPageProps) {
         </Card>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-600 font-medium">Your feedback helps us improve our service ✨</p>
+        <p className="text-center text-sm text-gray-700 font-medium">Your feedback helps us improve our service ✨</p>
       </div>
     </div>
   )
