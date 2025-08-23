@@ -12,41 +12,30 @@ export interface Database {
       feedbacks: {
         Row: {
           id: string
-          created_at: string
-          type: 'loved' | 'liked' | 'better' | 'poor'
-          original_text: string | null
-          ai_refined_text: string | null
-          final_text: string | null
-          use_ai: boolean
-          is_accurate: boolean | null
-          user_email: string | null
-          user_name: string | null
+          shop_id: string | null
+          customer_id: string | null
+          rating: number
+          comment: string | null
+          prize_given: boolean
+          submitted_at: string
         }
         Insert: {
           id?: string
-          created_at?: string
-          type: 'loved' | 'liked' | 'better' | 'poor'
-          original_text?: string | null
-          ai_refined_text?: string | null
-          final_text?: string | null
-          use_ai?: boolean
+          shop_id?: string | null
+          customer_id?: string | null
+          rating: number
           comment: string | null
-          is_accurate?: boolean | null
-          user_email?: string | null
-          user_name?: string | null
+          prize_given?: boolean
+          submitted_at?: string
         }
         Update: {
           id?: string
-          created_at?: string
-          type?: 'loved' | 'liked' | 'better' | 'poor'
-          original_text?: string | null
-          ai_refined_text?: string | null
-          final_text?: string | null
-          use_ai?: boolean
+          shop_id?: string | null
+          customer_id?: string | null
+          rating?: number
           comment?: string | null
-          is_accurate?: boolean | null
-          user_email?: string | null
-          user_name?: string | null
+          prize_given?: boolean
+          submitted_at?: string
         }
       }
     }

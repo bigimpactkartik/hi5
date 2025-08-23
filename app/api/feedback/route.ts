@@ -36,11 +36,21 @@ export async function POST(request: NextRequest) {
     
     const body = await request.json()
     
-    const feedbackData: FeedbackInsert = {
-      type: body.type,
+    // Map feedback type to rating (1-5 scale)
+    const ratingMap = {
+      'poor': 1,
+      'better': 2,
+      'liked': 4,
+      'loved': 5
+    }
+    
+    const feedbackData = {
+      shop_id: null, // You may want to set this based on your business logic
+      customer_id: null, // You may want to set this if you have customer tracking
+      rating: ratingMap[body.type as keyof typeof ratingMap] || 3,
       comment: body.finalText || body.aiRefinedText || body.originalText,
-      user_email: body.userEmail,
-      user_name: body.userName,
+      prize_given: false, // Default to false, update based on your business logic
+      submitted_at: new Date().toISOString()
     }
 
     const { data, error } = await supabase
