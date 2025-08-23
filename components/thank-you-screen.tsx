@@ -12,6 +12,7 @@ interface ThankYouScreenProps {
 export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   const [showConfetti, setShowConfetti] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
   const isPositiveFeedback = feedbackData.type === "loved" || feedbackData.type === "liked"
   const displayText = feedbackData.finalText || feedbackData.originalText
@@ -19,9 +20,40 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   useEffect(() => {
     setShowConfetti(true)
     const timer = setTimeout(() => setShowConfetti(false), 4000)
+    
+    // Save feedback to Supabase
+    saveFeedback()
+    
     return () => clearTimeout(timer)
   }, [])
 
+  const saveFeedback = async () => {
+    setIsSaving(true)
+    try {
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: feedbackData.type,
+          originalText: feedbackData.originalText,
+          aiRefinedText: feedbackData.aiRefinedText,
+          finalText: feedbackData.finalText,
+          useAI: feedbackData.useAI,
+          isAccurate: feedbackData.isAccurate,
+        }),
+      })
+
+      if (!response.ok) {
+        console.error('Failed to save feedback')
+      }
+    } catch (error) {
+      console.error('Error saving feedback:', error)
+    } finally {
+      setIsSaving(false)
+    }
+  }
   const copyToClipboard = async () => {
     if (!displayText) return
 
