@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Card } from "./ui/card"
 import { Button } from "./ui/button"
 import { saveFeedback, supabase } from "../lib/supabase"
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react"
 import type { FeedbackData } from "../App"
 
 interface ThankYouScreenProps {
@@ -94,6 +95,33 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
           <p className="text-gray-600 text-lg leading-relaxed font-medium">
             Thank you for sharing your feedback with BIP AI.
           </p>
+
+          {/* Clerk Authentication Section */}
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <SignedOut>
+              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 p-4 rounded-2xl mb-4 border border-purple-200">
+                <p className="text-sm text-gray-600 mb-3 font-semibold">Want to track your feedback?</p>
+                <SignInButton mode="modal">
+                  <Button className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold px-6 py-2 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                    Sign In
+                  </Button>
+                </SignInButton>
+              </div>
+            </SignedOut>
+            <SignedIn>
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-2xl mb-4 border border-green-200">
+                <p className="text-sm text-gray-600 mb-3 font-semibold">Welcome back!</p>
+                <UserButton 
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-10 h-10",
+                      userButtonPopoverCard: "shadow-2xl",
+                    }
+                  }}
+                />
+              </div>
+            </SignedIn>
+          </div>
 
           {isPositiveFeedback && displayText && (
             <div className="mt-6 pt-6 border-t border-gray-200">

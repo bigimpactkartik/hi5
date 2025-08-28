@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.45.0",
     "@radix-ui/react-checkbox": "latest",
     "@radix-ui/react-slot": "latest",
     "@supabase/supabase-js": "^2.56.0",
