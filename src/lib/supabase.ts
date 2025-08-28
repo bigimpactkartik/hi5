@@ -3,8 +3,10 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim() || ''
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim() || ''
 
-console.log('Supabase URL:', supabaseUrl)
-console.log('Supabase Key exists:', !!supabaseAnonKey)
+console.log('Supabase Config Check:')
+console.log('- URL:', supabaseUrl)
+console.log('- Key exists:', !!supabaseAnonKey)
+console.log('- Key length:', supabaseAnonKey.length)
 
 // Validate URL format
 const isValidUrl = (url: string) => {
@@ -16,6 +18,7 @@ const isValidUrl = (url: string) => {
   }
 }
 
+console.log('- URL is valid:', isValidUrl(supabaseUrl))
 // Only create client if both URL and key are available and URL is valid
 export const supabase = supabaseUrl && supabaseAnonKey && isValidUrl(supabaseUrl)
   ? createClient(supabaseUrl, supabaseAnonKey, {
@@ -34,7 +37,9 @@ export const supabase = supabaseUrl && supabaseAnonKey && isValidUrl(supabaseUrl
   : null
 
 if (!supabase) {
-  console.warn('Supabase client not initialized. Check your environment variables.')
+  console.error('❌ Supabase client not initialized. Check your environment variables.')
+} else {
+  console.log('✅ Supabase client initialized successfully')
 }
 export const saveFeedback = async (feedbackData: any) => {
   if (!supabase) {
