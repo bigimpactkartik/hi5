@@ -3,6 +3,7 @@ import { LandingPage } from "./components/LandingPage"
 import { ImprovementEntry } from "./components/ImprovementEntry"
 import { ThankYouScreen } from "./components/ThankYouScreen"
 import { ReviewEditPage } from "./components/ReviewEditPage"
+import { SyncSignin } from "./components/SyncSignin"
 
 export type FeedbackType = "loved" | "liked" | "better" | "poor"
 
@@ -56,6 +57,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background">
       <div className="animate-slide-in-up">{steps[currentStep]}</div>
+      <SyncSignin />
     </div>
   )
 }
