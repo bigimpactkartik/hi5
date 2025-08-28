@@ -15,8 +15,8 @@ export function SyncSignin() {
         const userData = {
           clerk_id: user.id,
           email: user.primaryEmailAddress?.emailAddress || '',
-          full_name: user.fullName || '',
-          image_url: user.imageUrl || '',
+          full_name: user.fullName || null,
+          image_url: user.imageUrl || null,
           updated_at: new Date().toISOString()
         }
 
