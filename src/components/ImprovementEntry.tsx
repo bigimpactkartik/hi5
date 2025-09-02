@@ -15,6 +15,7 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
   const [text, setText] = useState(feedbackData.originalText || "")
   const [isLoading, setIsLoading] = useState(false)
   const [enhanceReview, setEnhanceReview] = useState(true)
+  const [showCharacterWarning, setShowCharacterWarning] = useState(false)
 
   const isPositiveFeedback = feedbackData.type === "loved" || feedbackData.type === "liked"
   const headerText = isPositiveFeedback ? "What did you love about us?" : "What can we improve?"
@@ -22,8 +23,14 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
     ? "Tell us what you loved about our service..."
     : "Tell us how we can improve our service..."
 
+  const minCharacters = 30
+  const isTextTooShort = text.trim().length < minCharacters
+
   const handleSubmit = async () => {
-    if (!text.trim()) return
+    if (!text.trim() || isTextTooShort) {
+      setShowCharacterWarning(true)
+      return
+    }
 
     setIsLoading(true)
 
@@ -47,6 +54,13 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
     onNext()
   }
 
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.target.value)
+    if (showCharacterWarning && e.target.value.trim().length >= minCharacters) {
+      setShowCharacterWarning(false)
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50">
       <div className="w-full max-w-md space-y-6 animate-slide-in-up">
@@ -62,9 +76,19 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
               <Textarea
                 placeholder={placeholderText}
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={handleTextChange}
                 className="min-h-32 resize-none border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 rounded-2xl bg-gray-50/50 transition-all duration-200"
               />
+              <div className="flex justify-between items-center mt-2">
+                <span className={`text-xs ${text.trim().length < minCharacters ? 'text-red-500' : 'text-gray-500'}`}>
+                  {text.trim().length}/{minCharacters} characters minimum
+                </span>
+                {showCharacterWarning && (
+                  <span className="text-xs text-red-500 font-medium">
+                    Please enter at least {minCharacters} characters
+                  </span>
+                )}
+              </div>
             </div>
 
             {isPositiveFeedback && (
@@ -83,7 +107,7 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
 
             <Button
               onClick={handleSubmit}
-              disabled={!text.trim() || isLoading}
+              disabled={!text.trim() || isTextTooShort || isLoading}
               className="w-full h-12 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             >
               {isLoading ? (

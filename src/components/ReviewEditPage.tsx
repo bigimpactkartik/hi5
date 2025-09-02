@@ -14,6 +14,10 @@ interface ReviewEditPageProps {
 export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditPageProps) {
   const [editableText, setEditableText] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [showCharacterWarning, setShowCharacterWarning] = useState(false)
+
+  const minCharacters = 30
+  const isTextTooShort = editableText.trim().length < minCharacters
 
   useEffect(() => {
     const initializeText = async () => {
@@ -46,11 +50,23 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
   }, [feedbackData, onUpdate])
 
   const handleSubmit = () => {
+    if (isTextTooShort) {
+      setShowCharacterWarning(true)
+      return
+    }
+
     onUpdate({
       finalText: editableText,
       ...(feedbackData.useAI ? { aiRefinedText: editableText } : { originalText: editableText }),
     })
     onSubmit()
+  }
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditableText(e.target.value)
+    if (showCharacterWarning && e.target.value.trim().length >= minCharacters) {
+      setShowCharacterWarning(false)
+    }
   }
 
   const isPositive = feedbackData.type === "loved" || feedbackData.type === "liked"
@@ -79,15 +95,25 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
                 </label>
                 <Textarea
                   value={editableText}
-                  onChange={(e) => setEditableText(e.target.value)}
+                  onChange={handleTextChange}
                   placeholder={`Enter your ${isPositive ? "review" : "feedback"}...`}
                   className="min-h-[120px] resize-none border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 rounded-2xl bg-gray-50/50 transition-all duration-200"
                 />
+                <div className="flex justify-between items-center mt-2">
+                  <span className={`text-xs ${editableText.trim().length < minCharacters ? 'text-red-500' : 'text-gray-500'}`}>
+                    {editableText.trim().length}/{minCharacters} characters minimum
+                  </span>
+                  {showCharacterWarning && (
+                    <span className="text-xs text-red-500 font-medium">
+                      Please enter at least {minCharacters} characters
+                    </span>
+                  )}
+                </div>
               </div>
 
               <Button
                 onClick={handleSubmit}
-                disabled={!editableText.trim()}
+                disabled={!editableText.trim() || isTextTooShort}
                 className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 Submit {isPositive ? "Review" : "Feedback"}
