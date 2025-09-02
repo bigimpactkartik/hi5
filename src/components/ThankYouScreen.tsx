@@ -161,7 +161,7 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
 
           {!isPositiveFeedback && (
             <div className="mt-6 pt-6 border-t border-gray-200">
-              <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-4 rounded-2xl border border-orange-200">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-2xl border border-green-200">
                 <p className="text-sm text-gray-700 font-semibold">🎁 Collect your reward at the desk!</p>
               </div>
             </div>
