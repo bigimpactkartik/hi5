@@ -37,13 +37,7 @@ export default function App() {
       key="improvement"
       feedbackData={feedbackData}
       onUpdate={(data) => setFeedbackData((prev) => ({ ...prev, ...data }))}
-      onNext={() => {
-        if (isPositiveFeedback) {
-          setCurrentStep(2)
-        } else {
-          setCurrentStep(3)
-        }
-      }}
+      onNext={() => setCurrentStep(2)}
     />,
     <ReviewEditPage
       key="review-edit"

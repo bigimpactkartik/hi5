@@ -37,18 +37,10 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
     // Simulate processing
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
-    if (!isPositiveFeedback) {
-      onUpdate({
-        originalText: text,
-        useAI: false,
-        finalText: text,
-      })
-    } else {
-      onUpdate({
-        originalText: text,
-        useAI: enhanceReview,
-      })
-    }
+    onUpdate({
+      originalText: text,
+      useAI: enhanceReview,
+    })
 
     setIsLoading(false)
     onNext()
@@ -91,19 +83,17 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
               </div>
             </div>
 
-            {isPositiveFeedback && (
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="enhance-review"
-                  checked={enhanceReview}
-                  onCheckedChange={(checked) => setEnhanceReview(checked as boolean)}
-                  className="rounded-md border-2 border-blue-300 data-[state=checked]:bg-blue-500"
-                />
-                <label htmlFor="enhance-review" className="text-sm font-medium text-gray-700 cursor-pointer">
-                  Enhance your review
-                </label>
-              </div>
-            )}
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="enhance-review"
+                checked={enhanceReview}
+                onCheckedChange={(checked) => setEnhanceReview(checked as boolean)}
+                className="rounded-md border-2 border-blue-300 data-[state=checked]:bg-blue-500"
+              />
+              <label htmlFor="enhance-review" className="text-sm font-medium text-gray-700 cursor-pointer">
+                {isPositiveFeedback ? "Enhance your review" : "Make feedback constructive"}
+              </label>
+            </div>
 
             <Button
               onClick={handleSubmit}

@@ -95,7 +95,7 @@ export const enhanceText = async (text: string, type: string) => {
     const isPositive = type === "loved" || type === "liked"
     const prompt = isPositive
       ? `Enhance this positive review to make it more articulate, professional, and polished, while keeping the original sentiment intact. Return only one improved version, not multiple options:\n\n"${text}"`
-      : `Enhance this feedback to make it more constructive, actionable, and professional, while keeping the original concerns intact. Return only one improved version, not multiple options:\n\n"${text}"`
+      : `Transform this negative feedback into constructive criticism that is professional, specific, and actionable. Focus on solutions and improvements rather than just complaints. Keep the core concerns but make them helpful for business improvement. Return only one improved version:\n\n"${text}"`
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,

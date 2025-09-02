@@ -72,7 +72,11 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
   const isPositive = feedbackData.type === "loved" || feedbackData.type === "liked"
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4 flex items-center justify-center">
+    <div className={`min-h-screen p-4 flex items-center justify-center ${
+      isPositive 
+        ? 'bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50'
+        : 'bg-gradient-to-br from-orange-50 via-red-50 to-pink-50'
+    }`}>
       <Card className="w-full max-w-md mx-auto shadow-2xl border-0 bg-white/90 backdrop-blur-md rounded-3xl">
         <CardHeader className="text-center pb-4">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Confirm Review...</CardTitle>
@@ -84,8 +88,12 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
         <CardContent className="space-y-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
-              <span className="ml-3 text-gray-600 font-medium">Enhancing your text...</span>
+              <div className={`animate-spin rounded-full h-8 w-8 border-b-2 ${
+                isPositive ? 'border-purple-500' : 'border-orange-500'
+              }`}></div>
+              <span className="ml-3 text-gray-600 font-medium">
+                {isPositive ? "Enhancing your text..." : "Making feedback constructive..."}
+              </span>
             </div>
           ) : (
             <>
@@ -97,7 +105,11 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
                   value={editableText}
                   onChange={handleTextChange}
                   placeholder={`Enter your ${isPositive ? "review" : "feedback"}...`}
-                  className="min-h-[120px] resize-none border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 rounded-2xl bg-gray-50/50 transition-all duration-200"
+                  className={`min-h-[120px] resize-none border-gray-200 rounded-2xl bg-gray-50/50 transition-all duration-200 ${
+                    isPositive 
+                      ? 'focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20' 
+                      : 'focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20'
+                  }`}
                 />
                 <div className="flex justify-between items-center mt-2">
                   <span className={`text-xs ${editableText.trim().length < minCharacters ? 'text-red-500' : 'text-gray-500'}`}>
@@ -114,7 +126,11 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
               <Button
                 onClick={handleSubmit}
                 disabled={!editableText.trim() || isTextTooShort}
-                className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className={`w-full text-white font-semibold py-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
+                  isPositive
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700'
+                    : 'bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700'
+                }`}
               >
                 Submit {isPositive ? "Review" : "Feedback"}
               </Button>
