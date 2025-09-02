@@ -156,12 +156,6 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
               >
                 {copied ? "Copied!" : "Copy to Clipboard"}
               </Button>
-              <Button
-                onClick={() => window.open('https://www.google.com/maps/place//data=!4m3!3m2!1s0x3bae15002b9f9977:0xd42ac884d7d6c51a!12e1?source=g.page.m._&laa=merchant-review-solicitation', '_blank')}
-                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-              >
-                Leave Google Review ⭐
-              </Button>
             </div>
           )}
 
