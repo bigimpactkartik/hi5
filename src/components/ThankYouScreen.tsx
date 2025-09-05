@@ -220,21 +220,11 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
         </Card>
 
         {/* Completion Message */}
-        {isPositiveFeedback && (
-          <div className="text-center space-y-2">
-            <p className="text-sm text-gray-600">
-              {isSaving ? "Saving feedback..." : "✅ Feedback saved successfully"}
-            </p>
-          </div>
-        )}
-
-        {!isPositiveFeedback && (
-          <div className="text-center space-y-2">
-            <p className="text-sm text-gray-600">
-              {isSaving ? "Saving feedback..." : "✅ Feedback saved successfully"}
-            </p>
-          </div>
-        )}
+        <div className="text-center space-y-2">
+          <p className="text-sm text-gray-600">
+            {isSaving ? "Saving feedback..." : "✅ Feedback saved successfully"}
+          </p>
+        </div>
       </div>
     </div>
   )
