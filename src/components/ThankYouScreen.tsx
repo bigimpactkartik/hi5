@@ -195,7 +195,6 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
                       </div>
                     </div>
                   )}
-                  </div>
                 </div>
               </SignedIn>
               
