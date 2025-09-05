@@ -12,6 +12,7 @@ interface ThankYouScreenProps {
 export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   const [showConfetti, setShowConfetti] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   const isPositiveFeedback = feedbackData.type === "loved" || feedbackData.type === "liked"
   const displayText = feedbackData.finalText || feedbackData.originalText
@@ -53,6 +54,18 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
     }
     // Then open Google review page
     window.open('https://g.page/r/CRrF1teEyCrUEAE/review', '_blank')
+  }
+
+  const copyToClipboard = async () => {
+    if (displayText) {
+      try {
+        await navigator.clipboard.writeText(displayText)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      } catch (error) {
+        console.error("Copy failed:", error)
+      }
+    }
   }
 
   return (
@@ -173,51 +186,6 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
               </div>
             </div>
           )}
-        </Card>
-
-        {/* Completion Message */}
-        {isPositiveFeedback && (
-          <div className="text-center space-y-2">
-            <p className="text-sm text-gray-600">
-              {isSaving ? "Saving feedback..." : "✅ Feedback saved successfully"}
-            </p>
-          </div>
-        )}
-
-        {!isPositiveFeedback && (
-          <div className="text-center space-y-2">
-            <p className="text-sm text-gray-600">
-              {isSaving ? "Saving feedback..." : "✅ Thank you for your valuable feedback"}
-            </p>
-            <p className="text-xs text-gray-500 font-medium">Visit us at hi5.com/bipai ✨</p>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-                  <div className="flex justify-center">
-                  <UserButton 
-                    appearance={{
-                      elements: {
-                        avatarBox: "w-10 h-10",
-                        userButtonPopoverCard: "shadow-2xl",
-                      }
-                    }}
-                  />
-                  </div>
-                  <div className="mt-4">
-                    <Button
-                      onClick={() => window.open('https://g.page/r/CRrF1teEyCrUEAE/review', '_blank')}
-                      className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                    >
-                      Leave Google Review ⭐
-                    </Button>
-                  </div>
-                </div>
-              </SignedIn>
-            </div>
-          )}
 
           {isPositiveFeedback && displayText && (
             <div className="mt-6 pt-6 border-t border-gray-200">
@@ -243,13 +211,23 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
           )}
         </Card>
 
-        {/* Footer */}
-        <div className="text-center space-y-2">
-          <p className="text-sm text-muted-foreground">
-            {isSaving ? "Saving feedback..." : "Feedback submitted successfully"}
-          </p>
-          <p className="text-xs text-gray-500 font-medium">Visit us at hi5.com/bipai ✨</p>
-        </div>
+        {/* Completion Message */}
+        {isPositiveFeedback && (
+          <div className="text-center space-y-2">
+            <p className="text-sm text-gray-600">
+              {isSaving ? "Saving feedback..." : "✅ Feedback saved successfully"}
+            </p>
+          </div>
+        )}
+
+        {!isPositiveFeedback && (
+          <div className="text-center space-y-2">
+            <p className="text-sm text-gray-600">
+              {isSaving ? "Saving feedback..." : "✅ Thank you for your valuable feedback"}
+            </p>
+            <p className="text-xs text-gray-500 font-medium">Visit us at hi5.com/bipai ✨</p>
+          </div>
+        )}
       </div>
     </div>
   )
