@@ -77,7 +77,7 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
                 placeholder={placeholderText}
                 value={text}
                 onChange={handleTextChange}
-                className={`min-h-32 resize-none border-gray-200 rounded-2xl bg-gray-50/50 transition-all duration-200 ${
+                className={`min-h-32 resize-none border-gray-200 rounded-2xl bg-gray-50/30 text-gray-600 placeholder:text-gray-400 transition-all duration-200 ${
                   isPositiveFeedback
                     ? 'focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20'
                     : 'focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20'
