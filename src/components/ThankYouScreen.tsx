@@ -187,20 +187,6 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
             </div>
           )}
 
-          {isPositiveFeedback && displayText && (
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-2xl mb-4 border border-green-200">
-                <p className="text-sm text-gray-600 mb-2 font-semibold">Your review:</p>
-                <p className="text-sm text-gray-800 font-medium">{displayText}</p>
-              </div>
-              <Button
-                onClick={copyToClipboard}
-                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white mb-3 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-              >
-                {copied ? "Copied!" : "Copy to Clipboard"}
-              </Button>
-            </div>
-          )}
 
           {!isPositiveFeedback && (
             <div className="mt-6 pt-6 border-t border-gray-200">
