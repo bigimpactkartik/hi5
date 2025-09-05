@@ -192,6 +192,39 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
                 <p className="text-lg text-gray-800 font-bold mb-2">🎁 Collect Your Reward!</p>
                 <p className="text-sm text-gray-600">Visit our front desk to claim your special thank-you gift</p>
               </div>
+              
+              {/* Sign-in option for negative feedback */}
+              <div className="pt-4 border-t border-gray-200">
+                <SignedOut>
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-700 text-center font-medium">Want to stay updated on improvements?</p>
+                    <SignInButton mode="modal">
+                      <button className="w-full bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-medium py-3 px-4 rounded-2xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                        </svg>
+                        <span>Sign In (Optional)</span>
+                      </button>
+                    </SignInButton>
+                  </div>
+                </SignedOut>
+                
+                <SignedIn>
+                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-2xl border border-gray-200">
+                    <p className="text-sm text-gray-700 mb-3 font-medium text-center">Thanks for signing in!</p>
+                    <div className="flex justify-center">
+                      <UserButton 
+                        appearance={{
+                          elements: {
+                            avatarBox: "w-8 h-8",
+                            userButtonPopoverCard: "shadow-xl",
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                </SignedIn>
+              </div>
             </div>
           )}
 
