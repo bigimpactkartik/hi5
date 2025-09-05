@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Card } from "./ui/card"
 import { Button } from "./ui/button"
 import { saveFeedback, supabase } from "../lib/supabase"
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react"
+import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react"
 import type { FeedbackData } from "../App"
 
 interface ThankYouScreenProps {
@@ -12,7 +12,8 @@ interface ThankYouScreenProps {
 export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   const [showConfetti, setShowConfetti] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
-  const [isCopying, setIsCopying] = useState(false)
+  const [showCopyPopup, setShowCopyPopup] = useState(false)
+  const { isSignedIn } = useUser()
 
   const isPositiveFeedback = feedbackData.type === "loved" || feedbackData.type === "liked"
   const displayText = feedbackData.finalText || feedbackData.originalText
@@ -29,6 +30,12 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
     }
   }, [])
 
+  // Auto-copy text when user signs in (for positive feedback)
+  useEffect(() => {
+    if (isSignedIn && isPositiveFeedback && displayText) {
+      copyTextToClipboard()
+    }
+  }, [isSignedIn, isPositiveFeedback, displayText])
   const saveFeedbackToDatabase = async () => {
     setIsSaving(true)
     try {
@@ -43,33 +50,36 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
     }
   }
 
-  const handleLeaveReview = async () => {
-    setIsCopying(true)
-    
-    // Copy to clipboard first with animation
+  const copyTextToClipboard = async () => {
     if (displayText) {
       try {
         await navigator.clipboard.writeText(displayText)
-        // Show copying animation for 1 second
-        setTimeout(() => {
-          setIsCopying(false)
-          // Then open Google review page
-          window.open('https://g.page/r/CRrF1teEyCrUEAE/review', '_blank')
-        }, 1000)
+        setShowCopyPopup(true)
+        setTimeout(() => setShowCopyPopup(false), 3000)
       } catch (error) {
         console.error("Copy failed:", error)
-        setIsCopying(false)
-        // Still open review page even if copy fails
-        window.open('https://g.page/r/CRrF1teEyCrUEAE/review', '_blank')
       }
-    } else {
-      setIsCopying(false)
-      window.open('https://g.page/r/CRrF1teEyCrUEAE/review', '_blank')
     }
+  }
+
+  const handleLeaveReview = () => {
+    window.open('https://g.page/r/CRrF1teEyCrUEAE/review', '_blank')
   }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+      {/* Copy Success Popup */}
+      {showCopyPopup && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-in-up">
+          <div className="bg-green-500 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            <span className="font-medium">Review copied to clipboard!</span>
+          </div>
+        </div>
+      )}
+
       {/* Confetti Animation */}
       {showConfetti && (
         <div className="absolute inset-0 pointer-events-none">
@@ -124,10 +134,7 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
               <SignedOut>
                 <div className="space-y-4">
                   <p className="text-sm text-gray-700 text-center font-medium">Share your experience publicly</p>
-                  <SignInButton 
-                    mode="modal"
-                    forceRedirectUrl="/redirect/review"
-                  >
+                  <SignInButton mode="modal">
                     <button className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-4 px-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3">
                       <svg className="w-5 h-5" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -158,24 +165,16 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
                   </div>
                   <Button
                     onClick={handleLeaveReview}
-                    disabled={isCopying}
                     className="w-full h-12 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                   >
-                    {isCopying ? (
-                      <div className="flex items-center space-x-2">
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>Copying Review...</span>
-                      </div>
-                    ) : (
-                      "Leave Google Review ⭐"
-                    )}
+                    Leave Google Review ⭐
                   </Button>
                 </div>
               </SignedIn>
               
               <div className="pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 text-center">
-                  {isCopying ? "✅ Review copied to clipboard!" : "Your review will be automatically copied for easy pasting"}
+                  Your review will be automatically copied when you sign in
                 </p>
               </div>
             </div>
