@@ -12,7 +12,7 @@ interface ThankYouScreenProps {
 export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   const [showConfetti, setShowConfetti] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
-  const [copied, setCopied] = useState(false)
+  const [isCopying, setIsCopying] = useState(false)
 
   const isPositiveFeedback = feedbackData.type === "loved" || feedbackData.type === "liked"
   const displayText = feedbackData.finalText || feedbackData.originalText
@@ -44,27 +44,27 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   }
 
   const handleLeaveReview = async () => {
-    // Copy to clipboard first
+    setIsCopying(true)
+    
+    // Copy to clipboard first with animation
     if (displayText) {
       try {
         await navigator.clipboard.writeText(displayText)
+        // Show copying animation for 1 second
+        setTimeout(() => {
+          setIsCopying(false)
+          // Then open Google review page
+          window.open('https://g.page/r/CRrF1teEyCrUEAE/review', '_blank')
+        }, 1000)
       } catch (error) {
         console.error("Copy failed:", error)
+        setIsCopying(false)
+        // Still open review page even if copy fails
+        window.open('https://g.page/r/CRrF1teEyCrUEAE/review', '_blank')
       }
-    }
-    // Then open Google review page
-    window.open('https://g.page/r/CRrF1teEyCrUEAE/review', '_blank')
-  }
-
-  const copyToClipboard = async () => {
-    if (displayText) {
-      try {
-        await navigator.clipboard.writeText(displayText)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
-      } catch (error) {
-        console.error("Copy failed:", error)
-      }
+    } else {
+      setIsCopying(false)
+      window.open('https://g.page/r/CRrF1teEyCrUEAE/review', '_blank')
     }
   }
 
@@ -156,16 +156,24 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
                   </div>
                   <Button
                     onClick={handleLeaveReview}
+                    disabled={isCopying}
                     className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 py-4"
                   >
-                    Leave Google Review ⭐
+                    {isCopying ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Copying Review...</span>
+                      </div>
+                    ) : (
+                      "Leave Google Review ⭐"
+                    )}
                   </Button>
                 </div>
               </SignedIn>
               
               <div className="pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 text-center">
-                  Your review will be automatically copied for easy pasting
+                  {isCopying ? "✅ Review copied to clipboard!" : "Your review will be automatically copied for easy pasting"}
                 </p>
               </div>
             </div>
