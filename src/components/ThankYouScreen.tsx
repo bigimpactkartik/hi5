@@ -13,6 +13,7 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   const [showConfetti, setShowConfetti] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [showCopyPopup, setShowCopyPopup] = useState(false)
+  const [redirectCountdown, setRedirectCountdown] = useState(0)
   const { isSignedIn } = useUser()
 
   const isPositiveFeedback = feedbackData.type === "loved" || feedbackData.type === "liked"
@@ -30,12 +31,32 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
     }
   }, [])
 
-  // Auto-copy text when user signs in (for positive feedback)
+  // Auto-copy text and start redirect countdown when user signs in (for positive feedback)
   useEffect(() => {
     if (isSignedIn && isPositiveFeedback && displayText) {
       copyTextToClipboard()
+      // Start 3-second countdown for redirect
+      setRedirectCountdown(3)
     }
   }, [isSignedIn, isPositiveFeedback, displayText])
+
+  // Handle countdown and redirect
+  useEffect(() => {
+    if (redirectCountdown > 0) {
+      const timer = setTimeout(() => {
+        setRedirectCountdown(redirectCountdown - 1)
+      }, 1000)
+      return () => clearTimeout(timer)
+    } else if (redirectCountdown === 0 && isSignedIn && isPositiveFeedback) {
+      // Only redirect if countdown reached 0 and we're in positive flow
+      if (redirectCountdown === 0 && showCopyPopup === false) {
+        // Small delay to ensure copy popup has been shown
+        setTimeout(() => {
+          window.location.href = 'https://g.page/r/CRrF1teEyCrUEAE/review'
+        }, 500)
+      }
+    }
+  }, [redirectCountdown, isSignedIn, isPositiveFeedback, showCopyPopup])
   const saveFeedbackToDatabase = async () => {
     setIsSaving(true)
     try {
@@ -62,9 +83,6 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
     }
   }
 
-  const handleLeaveReview = () => {
-    window.open('https://g.page/r/CRrF1teEyCrUEAE/review', '_blank')
-  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
@@ -115,10 +133,10 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
         {/* Final Step Card */}
         <Card className="p-8 shadow-2xl border-0 bg-white/90 backdrop-blur-md text-center rounded-3xl">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            {isPositiveFeedback ? "Almost Done!" : "One Last Step"}
+            {isPositiveFeedback ? "Thank You!" : "Thank You!"}
           </h1>
           <p className="text-gray-600 text-sm leading-relaxed mb-6">
-            One final step to complete your feedback journey
+            {isPositiveFeedback ? "Your feedback has been submitted successfully" : "Your feedback has been submitted successfully"}
           </p>
 
           {/* Main Action Section - Only for positive feedback */}
@@ -149,26 +167,45 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
               </SignedOut>
               
               <SignedIn>
-                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-200">
-                  <p className="text-sm text-gray-700 mb-3 text-center">You'll be redirected to Google Reviews automatically!</p>
-                  <div className="flex justify-center">
-                    <UserButton 
-                      appearance={{
-                        elements: {
-                          avatarBox: "w-8 h-8",
-                          userButtonPopoverCard: "shadow-xl"
-                        }
-                      }}
-                    />
+                <div className="space-y-4">
+                  {redirectCountdown > 0 ? (
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-2xl border border-green-200">
+                      <div className="flex items-center justify-center space-x-2 mb-2">
+                        <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse"></div>
+                        <p className="text-sm text-green-700 font-medium">
+                          Redirecting to Google Reviews in {redirectCountdown}...
+                        </p>
+                      </div>
+                      <p className="text-xs text-green-600 text-center">
+                        Your review has been copied to clipboard
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-200">
+                      <p className="text-sm text-gray-700 mb-3 text-center">Thank you for your feedback!</p>
+                      <div className="flex justify-center">
+                        <UserButton 
+                          appearance={{
+                            elements: {
+                              avatarBox: "w-8 h-8",
+                              userButtonPopoverCard: "shadow-xl"
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
                   </div>
                 </div>
               </SignedIn>
               
-              <div className="pt-4 border-t border-gray-200">
-                <p className="text-xs text-gray-500 text-center">
-                  Your review will be copied and you'll be redirected to Google Reviews
-                </p>
-              </div>
+              {!isSignedIn && (
+                <div className="pt-4 border-t border-gray-200">
+                  <p className="text-xs text-gray-500 text-center">
+                    Your review will be copied and you'll be redirected to Google Reviews
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
