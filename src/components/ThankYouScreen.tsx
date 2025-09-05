@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { Card } from "./ui/card"
-import { Button } from "./ui/button"
-import { saveFeedback, supabase } from "../lib/supabase"
+import { saveFeedback } from "../lib/supabase"
 import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react"
 import type { FeedbackData } from "../App"
 
@@ -16,7 +15,6 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   const [redirectCountdown, setRedirectCountdown] = useState(0)
   const { isSignedIn } = useUser()
 
-  const isPositiveFeedback = feedbackData.type === "loved" || feedbackData.type === "liked"
   const displayText = feedbackData.finalText || feedbackData.originalText
 
   useEffect(() => {
@@ -31,14 +29,14 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
     }
   }, [])
 
-  // Auto-copy text and start redirect countdown when user signs in (for positive feedback)
+  // Auto-copy text and start redirect countdown when user signs in
   useEffect(() => {
-    if (isSignedIn && isPositiveFeedback && displayText) {
+    if (isSignedIn && displayText) {
       copyTextToClipboard()
       // Start 3-second countdown for redirect
       setRedirectCountdown(3)
     }
-  }, [isSignedIn, isPositiveFeedback, displayText])
+  }, [isSignedIn, displayText])
 
   // Handle countdown and redirect
   useEffect(() => {
@@ -47,16 +45,14 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
         setRedirectCountdown(redirectCountdown - 1)
       }, 1000)
       return () => clearTimeout(timer)
-    } else if (redirectCountdown === 0 && isSignedIn && isPositiveFeedback) {
-      // Only redirect if countdown reached 0 and we're in positive flow
-      if (redirectCountdown === 0 && showCopyPopup === false) {
-        // Small delay to ensure copy popup has been shown
-        setTimeout(() => {
-          window.location.href = 'https://g.page/r/CRrF1teEyCrUEAE/review'
-        }, 500)
-      }
+    } else if (redirectCountdown === 0 && isSignedIn) {
+      // Redirect after countdown completes
+      setTimeout(() => {
+        window.location.href = 'https://g.page/r/CRrF1teEyCrUEAE/review'
+      }, 500)
     }
-  }, [redirectCountdown, isSignedIn, isPositiveFeedback, showCopyPopup])
+  }, [redirectCountdown, isSignedIn])
+  
   const saveFeedbackToDatabase = async () => {
     setIsSaving(true)
     try {
@@ -82,7 +78,6 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
       }
     }
   }
-
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
@@ -115,7 +110,7 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
                   "#f59e0b", // amber
                   "#ef4444", // red
                   "#ec4899", // pink
-                ][Math.floor(Math.random() * 4)],
+                ][Math.floor(Math.random() * 6)],
               }}
             />
           ))}
@@ -133,101 +128,54 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
         {/* Final Step Card */}
         <Card className="p-8 shadow-2xl border-0 bg-white/90 backdrop-blur-md text-center rounded-3xl">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            {isPositiveFeedback ? "Thank You!" : "Thank You!"}
+            Thank You!
           </h1>
           <p className="text-gray-600 text-sm leading-relaxed mb-6">
-            {isPositiveFeedback ? "Your feedback has been submitted successfully" : "Your feedback has been submitted successfully"}
+            Your feedback has been submitted successfully
           </p>
 
-          {/* Main Action Section - Only for positive feedback */}
-          {isPositiveFeedback && (
-            <div className="space-y-4">
-              {displayText && (
-                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-200">
-                  <p className="text-xs text-gray-600 mb-2 font-medium">Your review:</p>
-                  <p className="text-sm text-gray-700 leading-relaxed">{displayText}</p>
-                </div>
-              )}
-              
-              <SignedOut>
-                <div className="space-y-4">
-                  <p className="text-sm text-gray-700 text-center font-medium">Share your experience publicly</p>
-                  <SignInButton mode="modal">
-                    <button className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-4 px-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3">
-                      <svg className="w-5 h-5" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                      </svg>
-                      <span>Sign In & Copy Review ⭐</span>
-                    </button>
-                  </SignInButton>
-                </div>
-              </SignedOut>
-              
-              <SignedIn>
-                <div className="space-y-4">
-                  {redirectCountdown > 0 ? (
-                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-2xl border border-green-200">
-                      <div className="flex items-center justify-center space-x-2 mb-2">
-                        <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse"></div>
-                        <p className="text-sm text-green-700 font-medium">
-                          Redirecting to Google Reviews in {redirectCountdown}...
-                        </p>
-                      </div>
-                      <p className="text-xs text-green-600 text-center">
-                        Your review has been copied to clipboard
+          <div className="space-y-4">
+            {displayText && (
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-200">
+                <p className="text-xs text-gray-600 mb-2 font-medium">Your review:</p>
+                <p className="text-sm text-gray-700 leading-relaxed">{displayText}</p>
+              </div>
+            )}
+            
+            <SignedOut>
+              <div className="space-y-4">
+                <p className="text-sm text-gray-700 text-center font-medium">Share your experience publicly</p>
+                <SignInButton mode="modal">
+                  <button className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-4 px-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24">
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span>Sign In & Copy Review ⭐</span>
+                  </button>
+                </SignInButton>
+              </div>
+            </SignedOut>
+            
+            <SignedIn>
+              <div className="space-y-4">
+                {redirectCountdown > 0 ? (
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-2xl border border-green-200">
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse"></div>
+                      <p className="text-sm text-green-700 font-medium">
+                        Redirecting to Google Reviews in {redirectCountdown}...
                       </p>
                     </div>
-                  ) : (
-                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-200">
-                      <p className="text-sm text-gray-700 mb-3 text-center">Thank you for your feedback!</p>
-                      <div className="flex justify-center">
-                        <UserButton 
-                          appearance={{
-                            elements: {
-                              avatarBox: "w-8 h-8",
-                              userButtonPopoverCard: "shadow-xl"
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </SignedIn>
-              
-              {!isSignedIn && (
-                <div className="pt-4 border-t border-gray-200">
-                  <p className="text-xs text-gray-500 text-center">
-                    Your review will be copied and you'll be redirected to Google Reviews
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {!isPositiveFeedback && (
-            <div className="space-y-4">
-              <div className="space-y-4">
-                <SignedOut>
-                  <div className="space-y-3">
-                    <p className="text-sm text-gray-600 text-center">Sign in to complete your feedback</p>
-                    <SignInButton mode="modal">
-                      <button className="w-full h-12 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                        </svg>
-                        <span>Sign In</span>
-                      </button>
-                    </SignInButton>
+                    <p className="text-xs text-green-600 text-center">
+                      Your review has been copied to clipboard
+                    </p>
                   </div>
-                </SignedOut>
-                
-                <SignedIn>
+                ) : (
                   <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-200">
-                    <p className="text-sm text-gray-700 mb-3 text-center">Feedback completed successfully!</p>
+                    <p className="text-sm text-gray-700 mb-3 text-center">Thank you for your feedback!</p>
                     <div className="flex justify-center">
                       <UserButton 
                         appearance={{
@@ -239,11 +187,18 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
                       />
                     </div>
                   </div>
-                </SignedIn>
+                )}
               </div>
-            </div>
-          )}
-
+            </SignedIn>
+            
+            {!isSignedIn && (
+              <div className="pt-4 border-t border-gray-200">
+                <p className="text-xs text-gray-500 text-center">
+                  Your review will be copied and you'll be redirected to Google Reviews
+                </p>
+              </div>
+            )}
+          </div>
         </Card>
 
         {/* Completion Message */}

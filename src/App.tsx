@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { LandingPage } from "./components/LandingPage"
 import { ImprovementEntry } from "./components/ImprovementEntry"
 import { ThankYouScreen } from "./components/ThankYouScreen"
+import { NegativeThankYou } from "./components/NegativeThankYou"
 import { ReviewEditPage } from "./components/ReviewEditPage"
 import { SyncSignin } from "./components/SyncSignin"
 import ReviewRedirect from "./pages/redirect/review"
@@ -58,7 +59,11 @@ function FeedbackFlow() {
       onUpdate={(data) => setFeedbackData((prev) => ({ ...prev, ...data }))}
       onSubmit={() => setCurrentStep(3)}
     />,
-    <ThankYouScreen key="thanks" feedbackData={feedbackData} />,
+    isPositiveFeedback ? (
+      <ThankYouScreen key="thanks" feedbackData={feedbackData} />
+    ) : (
+      <NegativeThankYou key="negative-thanks" feedbackData={feedbackData} />
+    ),
   ]
 
   return (
