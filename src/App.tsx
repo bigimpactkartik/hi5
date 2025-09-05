@@ -1,9 +1,11 @@
 import { useState } from "react"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { LandingPage } from "./components/LandingPage"
 import { ImprovementEntry } from "./components/ImprovementEntry"
 import { ThankYouScreen } from "./components/ThankYouScreen"
 import { ReviewEditPage } from "./components/ReviewEditPage"
 import { SyncSignin } from "./components/SyncSignin"
+import ReviewRedirect from "./pages/redirect/review"
 
 export type FeedbackType = "loved" | "liked" | "better" | "poor"
 
@@ -17,6 +19,17 @@ export interface FeedbackData {
 }
 
 export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/redirect/review" element={<ReviewRedirect />} />
+        <Route path="/*" element={<FeedbackFlow />} />
+      </Routes>
+    </Router>
+  )
+}
+
+function FeedbackFlow() {
   const [currentStep, setCurrentStep] = useState(0)
   const [feedbackData, setFeedbackData] = useState<FeedbackData>({
     type: "loved",

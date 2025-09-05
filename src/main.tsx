@@ -9,13 +9,12 @@ if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Clerk Publishable Key")
 }
 
-const GOOGLE_REVIEW_URL = "https://g.page/r/CRrF1teEyCrUEAE/review"
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ClerkProvider 
       publishableKey={PUBLISHABLE_KEY} 
-      signInForceRedirectUrl={GOOGLE_REVIEW_URL}
-      signUpForceRedirectUrl={GOOGLE_REVIEW_URL}
+      signInForceRedirectUrl="/redirect/review"
+      signUpForceRedirectUrl="/redirect/review"
       afterSignOutUrl="/"
     >
       <App />
