@@ -33,26 +33,11 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   useEffect(() => {
     if (isSignedIn && displayText) {
       copyTextToClipboard()
-      // Start 3-second countdown for redirect
-      setRedirectCountdown(3)
-    }
-  }, [isSignedIn, displayText])
-
-  // Handle countdown and redirect
-  useEffect(() => {
-    if (redirectCountdown > 0) {
-      const timer = setTimeout(() => {
-        setRedirectCountdown(redirectCountdown - 1)
-      }, 1000)
-      return () => clearTimeout(timer)
-    } else if (redirectCountdown === 0 && isSignedIn) {
-      // Redirect after countdown completes
+      // Add feedback type to URL and redirect to review page
+      const redirectUrl = `/redirect/review?type=${feedbackData.type}`
       setTimeout(() => {
-        window.location.href = 'https://g.page/r/CRrF1teEyCrUEAE/review'
-      }, 500)
-    }
-  }, [redirectCountdown, isSignedIn])
-  
+        window.location.href = redirectUrl
+      }, 2000) // 2 second delay to show thank you message
   const saveFeedbackToDatabase = async () => {
     setIsSaving(true)
     try {
@@ -161,33 +146,17 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
             
             <SignedIn>
               <div className="space-y-4">
-                {redirectCountdown > 0 ? (
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-2xl border border-green-200">
-                    <div className="flex items-center justify-center space-x-2 mb-2">
-                      <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse"></div>
-                      <p className="text-sm text-green-700 font-medium">
-                        Redirecting to Google Reviews in {redirectCountdown}...
-                      </p>
-                    </div>
-                    <p className="text-xs text-green-600 text-center">
-                      Your review has been copied to clipboard
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-2xl border border-green-200">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse"></div>
+                    <p className="text-sm text-green-700 font-medium">
+                      Redirecting to Google Reviews...
                     </p>
                   </div>
-                ) : (
-                  <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-200">
-                    <p className="text-sm text-gray-700 mb-3 text-center">Thank you for your feedback!</p>
-                    <div className="flex justify-center">
-                      <UserButton 
-                        appearance={{
-                          elements: {
-                            avatarBox: "w-8 h-8",
-                            userButtonPopoverCard: "shadow-xl"
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
-                )}
+                  <p className="text-xs text-green-600 text-center">
+                    Your review has been copied to clipboard
+                  </p>
+                </div>
               </div>
             </SignedIn>
             
