@@ -118,7 +118,7 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
                 disabled={!editableText.trim() || isTextTooShort}
                 className="w-full text-white font-semibold py-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
               >
-                Submit {isPositive ? "Review" : "Feedback"}
+                Next
               </Button>
             </>
           )}
