@@ -9,9 +9,17 @@ if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Clerk Publishable Key")
 }
 
+// Get redirect URLs from environment variables
+const SIGN_IN_FORCE_REDIRECT_URL = import.meta.env.VITE_CLERK_SIGN_IN_FORCE_REDIRECT_URL
+const SIGN_UP_FORCE_REDIRECT_URL = import.meta.env.VITE_CLERK_SIGN_UP_FORCE_REDIRECT_URL
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+    <ClerkProvider 
+      publishableKey={PUBLISHABLE_KEY} 
+      afterSignOutUrl="/"
+      signInForceRedirectUrl={SIGN_IN_FORCE_REDIRECT_URL}
+      signUpForceRedirectUrl={SIGN_UP_FORCE_REDIRECT_URL}
+    >
       <App />
     </ClerkProvider>
   </React.StrictMode>,
