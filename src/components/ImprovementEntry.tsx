@@ -54,19 +54,11 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
   }
 
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center p-4 ${
-      isPositiveFeedback 
-        ? 'bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50'
-        : 'bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50'
-    }`}>
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="w-full max-w-md space-y-6 animate-slide-in-up">
         {/* Header */}
         <div className="text-center">
-          <h1 className={`text-2xl font-bold bg-clip-text text-transparent font-[family-name:var(--font-heading)] ${
-            isPositiveFeedback
-              ? 'bg-gradient-to-r from-blue-600 to-purple-600'
-              : 'bg-gradient-to-r from-blue-600 to-purple-600'
-          }`}>{headerText}</h1>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">{headerText}</h1>
         </div>
 
         {/* Input Card */}
@@ -77,11 +69,7 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
                 placeholder={placeholderText}
                 value={text}
                 onChange={handleTextChange}
-                className={`min-h-32 resize-none border-gray-200 rounded-2xl bg-gray-50/30 text-gray-600 placeholder:text-gray-400 transition-all duration-200 ${
-                  isPositiveFeedback
-                    ? 'focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20'
-                    : 'focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20'
-                }`}
+                className="min-h-32 resize-none border-gray-200 rounded-2xl bg-gray-50/30 text-gray-700 placeholder:text-gray-400 transition-all duration-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20"
               />
               <div className="flex justify-between items-center mt-2">
                 <span className={`text-xs ${text.trim().length < minCharacters ? 'text-red-500' : 'text-gray-500'}`}>
@@ -100,13 +88,9 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
                 id="enhance-review"
                 checked={enhanceReview}
                 onCheckedChange={(checked) => setEnhanceReview(checked as boolean)}
-                className={`rounded-md border-2 data-[state=checked]:bg-blue-500 ${
-                  isPositiveFeedback
-                    ? 'border-blue-300'
-                    : 'border-blue-300'
-                }`}
+                className="rounded-md border-2 border-indigo-300 data-[state=checked]:bg-indigo-500"
               />
-              <label htmlFor="enhance-review" className="text-sm font-medium text-gray-700 cursor-pointer">
+              <label htmlFor="enhance-review" className="text-sm font-medium text-gray-600 cursor-pointer">
                 {isPositiveFeedback ? "Enhance your review" : "Make feedback constructive"}
               </label>
             </div>
@@ -114,11 +98,7 @@ export function ImprovementEntry({ feedbackData, onUpdate, onNext }: Improvement
             <Button
               onClick={handleSubmit}
               disabled={!text.trim() || isTextTooShort || isLoading}
-              className={`w-full h-12 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ${
-                isPositiveFeedback
-                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
-                  : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
-              }`}
+              className="w-full h-12 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
             >
               {isLoading ? (
                 <div className="flex items-center space-x-2">

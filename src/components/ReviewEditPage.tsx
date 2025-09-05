@@ -72,11 +72,11 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
   const isPositive = feedbackData.type === "loved" || feedbackData.type === "liked"
 
   return (
-    <div className="min-h-screen p-4 flex items-center justify-center bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen p-4 flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Card className="w-full max-w-md mx-auto shadow-2xl border-0 bg-white/90 backdrop-blur-md rounded-3xl">
         <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Confirm Review...</CardTitle>
-          <p className="text-gray-600 text-sm mt-2 font-medium">
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Confirm Review</CardTitle>
+          <p className="text-gray-600 text-sm mt-2">
             {feedbackData.useAI ? "Enhanced version ready for editing" : "Your original text"}
           </p>
         </CardHeader>
@@ -85,21 +85,21 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
-              <span className="ml-3 text-gray-600 font-medium">
+              <span className="ml-3 text-gray-600">
                 {isPositive ? "Enhancing your text..." : "Making feedback constructive..."}
               </span>
             </div>
           ) : (
             <>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700">
+                <label className="text-sm font-medium text-gray-700">
                   {isPositive ? "Your Review:" : "Your Feedback:"}
                 </label>
                 <Textarea
                   value={editableText}
                   onChange={handleTextChange}
                   placeholder={`Enter your ${isPositive ? "review" : "feedback"}...`}
-                  className="min-h-[120px] resize-none border-gray-200 rounded-2xl bg-gray-50/50 transition-all duration-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20"
+                  className="min-h-[120px] resize-none border-gray-200 rounded-2xl bg-gray-50/30 text-gray-700 transition-all duration-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20"
                 />
                 <div className="flex justify-between items-center mt-2">
                   <span className={`text-xs ${editableText.trim().length < minCharacters ? 'text-red-500' : 'text-gray-500'}`}>
@@ -116,7 +116,7 @@ export function ReviewEditPage({ feedbackData, onUpdate, onSubmit }: ReviewEditP
               <Button
                 onClick={handleSubmit}
                 disabled={!editableText.trim() || isTextTooShort}
-                className="w-full text-white font-semibold py-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+                className="w-full h-12 text-white font-semibold rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
               >
                 Next
               </Button>

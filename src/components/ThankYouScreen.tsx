@@ -69,7 +69,7 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
       {/* Confetti Animation */}
       {showConfetti && (
         <div className="absolute inset-0 pointer-events-none">
@@ -97,15 +97,17 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
       <div className="w-full max-w-md space-y-6 animate-bounce-in">
         {/* Progress Icon */}
         <div className="text-center">
-          <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-2xl mb-4 transform hover:scale-105 transition-all duration-300">
+          <div className="w-20 h-20 mx-auto bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center shadow-2xl mb-4 transform hover:scale-105 transition-all duration-300">
             <span className="text-2xl text-white font-bold">3/3</span>
           </div>
         </div>
 
         {/* Final Step Card */}
         <Card className="p-8 shadow-2xl border-0 bg-white/90 backdrop-blur-md text-center rounded-3xl">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2 font-[family-name:var(--font-heading)]">Almost Done!</h1>
-          <p className="text-gray-600 text-sm leading-relaxed font-medium mb-6">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            {isPositiveFeedback ? "Almost Done!" : "One Last Step"}
+          </h1>
+          <p className="text-gray-600 text-sm leading-relaxed mb-6">
             One final step to complete your feedback journey
           </p>
 
@@ -113,20 +115,20 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
           {isPositiveFeedback && (
             <div className="space-y-4">
               {displayText && (
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-2xl border border-blue-200">
-                  <p className="text-xs text-gray-600 mb-2 font-semibold">Your review:</p>
-                  <p className="text-sm text-gray-800 font-medium leading-relaxed">{displayText}</p>
+                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-200">
+                  <p className="text-xs text-gray-600 mb-2 font-medium">Your review:</p>
+                  <p className="text-sm text-gray-700 leading-relaxed">{displayText}</p>
                 </div>
               )}
               
               <SignedOut>
                 <div className="space-y-4">
-                  <p className="text-sm text-gray-700 text-center font-semibold">Share your experience publicly</p>
+                  <p className="text-sm text-gray-700 text-center font-medium">Share your experience publicly</p>
                   <SignInButton 
                     mode="modal"
                     forceRedirectUrl="/redirect/review"
                   >
-                    <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-4 px-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3">
+                    <button className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-4 px-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-3">
                       <svg className="w-5 h-5" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -141,8 +143,8 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
               
               <SignedIn>
                 <div className="space-y-4">
-                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-2xl border border-blue-200">
-                    <p className="text-sm text-gray-700 mb-3 font-semibold text-center">Ready to share your experience?</p>
+                  <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-200">
+                    <p className="text-sm text-gray-700 mb-3 font-medium text-center">Ready to share your experience?</p>
                     <div className="flex justify-center">
                       <UserButton 
                         appearance={{
@@ -157,7 +159,7 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
                   <Button
                     onClick={handleLeaveReview}
                     disabled={isCopying}
-                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 py-4"
+                    className="w-full h-12 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                   >
                     {isCopying ? (
                       <div className="flex items-center space-x-2">
@@ -181,14 +183,12 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
 
           {!isPositiveFeedback && (
             <div className="space-y-4">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">One Last Step</h2>
-              
-              <div className="pt-4 border-t border-gray-200">
+              <div className="space-y-4">
                 <SignedOut>
                   <div className="space-y-3">
-                    <p className="text-sm text-gray-700 text-center font-medium">Sign in to complete your feedback</p>
+                    <p className="text-sm text-gray-600 text-center">Sign in to complete your feedback</p>
                     <SignInButton mode="modal">
-                      <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-2xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
+                      <button className="w-full h-12 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                         </svg>
@@ -199,8 +199,8 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
                 </SignedOut>
                 
                 <SignedIn>
-                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-2xl border border-blue-200">
-                    <p className="text-sm text-gray-700 mb-3 font-medium text-center">Feedback completed successfully!</p>
+                  <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-200">
+                    <p className="text-sm text-gray-700 mb-3 text-center">Feedback completed successfully!</p>
                     <div className="flex justify-center">
                       <UserButton 
                         appearance={{
