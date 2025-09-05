@@ -181,43 +181,32 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
 
           {!isPositiveFeedback && (
             <div className="space-y-4">
-              <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg mb-4">
-                <span className="text-2xl">🎁</span>
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-gray-800 mb-2">Thank You!</h2>
-                <p className="text-gray-600 mb-4">Your feedback helps us improve our service</p>
-              </div>
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
-                <p className="text-lg text-gray-800 font-bold mb-2">🎁 Collect Your Reward!</p>
-                <p className="text-sm text-gray-600">Visit our front desk to claim your special thank-you gift</p>
-              </div>
+              <h2 className="text-xl font-bold text-gray-800 mb-4">One Last Step</h2>
               
-              {/* Sign-in option for negative feedback */}
               <div className="pt-4 border-t border-gray-200">
                 <SignedOut>
                   <div className="space-y-3">
-                    <p className="text-sm text-gray-700 text-center font-medium">Want to stay updated on improvements?</p>
+                    <p className="text-sm text-gray-700 text-center font-medium">Sign in to complete your feedback</p>
                     <SignInButton mode="modal">
-                      <button className="w-full bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-medium py-3 px-4 rounded-2xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
+                      <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-2xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                         </svg>
-                        <span>Sign In (Optional)</span>
+                        <span>Sign In</span>
                       </button>
                     </SignInButton>
                   </div>
                 </SignedOut>
                 
                 <SignedIn>
-                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-2xl border border-gray-200">
-                    <p className="text-sm text-gray-700 mb-3 font-medium text-center">Thanks for signing in!</p>
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-2xl border border-blue-200">
+                    <p className="text-sm text-gray-700 mb-3 font-medium text-center">Feedback completed successfully!</p>
                     <div className="flex justify-center">
                       <UserButton 
                         appearance={{
                           elements: {
                             avatarBox: "w-8 h-8",
-                            userButtonPopoverCard: "shadow-xl",
+                            userButtonPopoverCard: "shadow-xl"
                           }
                         }}
                       />
@@ -228,14 +217,6 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
             </div>
           )}
 
-
-          {!isPositiveFeedback && (
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-2xl border border-green-200">
-                <p className="text-sm text-gray-700 font-semibold">🎁 Collect your reward at the desk!</p>
-              </div>
-            </div>
-          )}
         </Card>
 
         {/* Completion Message */}
@@ -250,9 +231,8 @@ export function ThankYouScreen({ feedbackData }: ThankYouScreenProps) {
         {!isPositiveFeedback && (
           <div className="text-center space-y-2">
             <p className="text-sm text-gray-600">
-              {isSaving ? "Saving feedback..." : "✅ Thank you for your valuable feedback"}
+              {isSaving ? "Saving feedback..." : "✅ Feedback saved successfully"}
             </p>
-            <p className="text-xs text-gray-500 font-medium">Visit us at hi5.com/bipai ✨</p>
           </div>
         )}
       </div>
